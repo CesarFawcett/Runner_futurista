@@ -19,8 +19,7 @@ const finalCoinsEl = document.getElementById('final-coins');
 const GRAVITY = 0.6;
 const JUMP_FORCE = -12;
 const GROUND_Y_OFFSET = 50;
-const INITIAL_GAME_SPEED = 5;
-const SPEED_INCREMENT = 0.001;
+const INITIAL_GAME_SPEED = 4;
 
 // Estado del Juego
 let gameActive = false;
@@ -46,6 +45,8 @@ class Player {
         this.y = canvas.height - GROUND_Y_OFFSET - this.height;
         this.dy = 0;
         this.isJumping = false;
+        this.energy = 0;
+        this.maxEnergy = 3;
         this.color = '#00f2ff';
         this.trail = [];
     }
@@ -73,7 +74,10 @@ class Player {
     }
 
     update() {
-        // Gravedad y Movimiento
+        // Aplicar movimiento primero
+        this.y += this.dy;
+
+        // Gravedad y colisión con el suelo
         if (this.y + this.height < canvas.height - GROUND_Y_OFFSET) {
             this.dy += GRAVITY;
             this.isJumping = true;
@@ -82,8 +86,6 @@ class Player {
             this.isJumping = false;
             this.y = canvas.height - GROUND_Y_OFFSET - this.height;
         }
-
-        this.y += this.dy;
 
         // Actualizar estela
         this.trail.push({ x: this.x, y: this.y });
@@ -94,6 +96,11 @@ class Player {
         if (!this.isJumping) {
             this.dy = JUMP_FORCE;
             this.isJumping = true;
+        } else if (this.energy > 0) {
+            this.dy = JUMP_FORCE;
+            this.energy--;
+            updateEnergyUI();
+            createJumpParticles(this.x + this.width/2, this.y + this.height);
         }
     }
 }
@@ -163,6 +170,32 @@ function resize() {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
     highScoreEl.innerText = `HIGH: ${String(Math.floor(highScore)).padStart(4, '0')}`;
+    updateEnergyUI();
+}
+
+function updateEnergyUI() {
+    const slots = document.querySelectorAll('.energy-slot');
+    slots.forEach((slot, index) => {
+        if (index < player.energy) {
+            slot.classList.add('filled');
+        } else {
+            slot.classList.remove('filled');
+        }
+    });
+}
+
+function createJumpParticles(x, y) {
+    for(let i=0; i<8; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            dx: (Math.random() - 0.5) * 4,
+            dy: (Math.random() * 2),
+            size: Math.random() * 3 + 1,
+            life: 20,
+            color: '#00f2ff'
+        });
+    }
 }
 
 // Generar Fondo (Estrellas)
@@ -279,8 +312,14 @@ function gameLoop() {
         if (dist < 30) {
             coins += 10;
             coinsEl.innerText = `COINS: ${coins}`;
+            
+            // Cargar energía de doble salto
+            if (player.energy < player.maxEnergy) {
+                player.energy++;
+                updateEnergyUI();
+            }
+
             collectibles.splice(index, 1);
-            // Efecto de brillo al recolectar
             score += 50; 
         }
 
@@ -289,10 +328,26 @@ function gameLoop() {
         }
     });
 
-    // Incrementar puntuación y velocidad
+    // Incrementar puntuación
     score += 1;
-    gameSpeed += SPEED_INCREMENT;
+    
+    // Escalar velocidad cada 1000 puntos
+    const speedBoost = Math.floor(score / 1000) * 0.5;
+    gameSpeed = INITIAL_GAME_SPEED + speedBoost;
+    
     scoreEl.innerText = `SCORE: ${String(Math.floor(score)).padStart(4, '0')}`;
+
+    // Procesar Partículas
+    particles.forEach((p, index) => {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.life--;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life / 20;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        if (p.life <= 0) particles.splice(index, 1);
+    });
+    ctx.globalAlpha = 1;
 
     animationId = requestAnimationFrame(gameLoop);
 }
@@ -305,6 +360,8 @@ function startGame() {
     gameSpeed = INITIAL_GAME_SPEED;
     obstacles = [];
     collectibles = [];
+    particles = [];
+    spawnTimer = 0; 
     player = new Player();
     
     startMenu.classList.add('hidden');
