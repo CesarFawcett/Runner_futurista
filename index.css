@@ -41,6 +41,25 @@ body {
     background: linear-gradient(to bottom, #050510 0%, #101030 100%);
 }
 
+#energy-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.energy-slot {
+    width: 30px;
+    height: 10px;
+    border: 1px solid var(--player-color);
+    background: rgba(0, 242, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.energy-slot.filled {
+    background: var(--player-color);
+    box-shadow: var(--neon-shadow);
+}
+
 canvas {
     display: block;
     width: 100%;
