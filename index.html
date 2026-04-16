@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runner Futurista | Neon Runner</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <div class="ui-layer">
+            <div class="score-container">
+                <div id="score">SCORE: 0000</div>
+                <div id="coins">COINS: 0</div>
+                <div id="high-score">HIGH: 0000</div>
+            </div>
+        </div>
+
+        <div id="start-menu" class="overlay">
+            <h1>NEON RUNNER</h1>
+            <button id="start-btn" class="btn">COMENZAR</button>
+            <div class="footer-info">ESPACIO O CLIC PARA SALTAR</div>
+        </div>
+
+        <div id="game-over-menu" class="overlay hidden">
+            <h1 style="color: var(--obstacle-color); text-shadow: var(--neon-shadow-red);">GAME OVER</h1>
+            <div id="final-stats" style="margin-bottom: 20px; font-size: 24px; text-align: center;">
+                Puntuación: <span id="final-score">0</span><br>
+                Monedas: <span id="final-coins">0</span>
+            </div>
+            <button id="restart-btn" class="btn">REINTENTAR</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

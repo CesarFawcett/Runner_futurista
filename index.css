@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap');
+
+:root {
+    --bg-color: #050510;
+    --player-color: #00f2ff;
+    --obstacle-color: #ff0055;
+    --coin-color: #ffd700;
+    --accent-color: #7000ff;
+    --text-color: #ffffff;
+    --neon-shadow: 0 0 10px rgba(0, 242, 255, 0.8), 0 0 20px rgba(0, 242, 255, 0.4);
+    --neon-shadow-red: 0 0 10px rgba(255, 0, 85, 0.8), 0 0 20px rgba(255, 0, 85, 0.4);
+    --neon-shadow-gold: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 1200px;
+    max-height: 600px;
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 0 30px rgba(112, 0, 255, 0.2);
+    background: linear-gradient(to bottom, #050510 0%, #101030 100%);
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.score-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    text-shadow: var(--neon-shadow);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(5, 5, 16, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+h1 {
+    font-size: 64px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: var(--player-color);
+    text-shadow: var(--neon-shadow);
+}
+
+.btn {
+    padding: 15px 40px;
+    font-size: 24px;
+    background: transparent;
+    color: var(--player-color);
+    border: 2px solid var(--player-color);
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    box-shadow: var(--neon-shadow);
+    outline: none;
+}
+
+.btn:hover {
+    background: var(--player-color);
+    color: var(--bg-color);
+    box-shadow: 0 0 40px var(--player-color);
+}
+
+.footer-info {
+    position: absolute;
+    bottom: 20px;
+    font-size: 14px;
+    opacity: 0.6;
+    font-family: 'Roboto Mono', monospace;
+}
